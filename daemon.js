@@ -1,14 +1,16 @@
 const electron = require('electron');
 const log = require('electron-log');
-const daemonManager = require('./../clientBinaries/clientBinaries');
+//const daemonManager = require('./../clientBinaries/clientBinaries');
 const path = require('path');
 const rpc = require('./rpc');
 
+let daemonManager;
 let daemon;
 let options;
 let initialized;
 
-function init(callback) {
+function init(mgr, callback) {
+  daemonManager = mgr;
   options = parseArguments();
 
   if (initialized) {
@@ -44,7 +46,7 @@ function waitForDaemon(callback) {
   const daemonStartup = () => {
     rpc.checkDaemon(options)
       .then(callback)
-      .catch(() =>  retries < maxRetries && setTimeout(daemonStartup, 1000));
+      .catch(() => retries < maxRetries && setTimeout(daemonStartup, 1000));
     retries++;
     if (daemon.exitCode || retries >= maxRetries) {
       console.log(daemon.exitCode, retries);
@@ -57,19 +59,19 @@ function waitForDaemon(callback) {
 }
 
 /*
-** compose options from arguments
-**
-** exemple:
-** --dev -testnet -reindex -rpcuser=user -rpcpassword=pass
-** strips --dev out of argv (double dash is not a particld argument) and returns
-** {
-**   dev: true,
-**   testnet: true,
-**   reindex: true,
-**   rpcuser: user,
-**   rpcpassword: pass
-** }
-*/
+ ** compose options from arguments
+ **
+ ** exemple:
+ ** --dev -testnet -reindex -rpcuser=user -rpcpassword=pass
+ ** strips --dev out of argv (double dash is not a particld argument) and returns
+ ** {
+ **   dev: true,
+ **   testnet: true,
+ **   reindex: true,
+ **   rpcuser: user,
+ **   rpcpassword: pass
+ ** }
+ */
 function parseArguments() {
 
   let options = {};
@@ -86,7 +88,7 @@ function parseArguments() {
     if (arg.includes('=')) {
       arg = arg.split('=');
       options[arg[0].substr(1)] = arg[1];
-    } else if (arg[1] === '-'){
+    } else if (arg[1] === '-') {
       // double dash command
       options[arg.substr(2)] = true;
     } else if (arg[0] === '-') {

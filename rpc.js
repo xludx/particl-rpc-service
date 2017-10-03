@@ -12,8 +12,8 @@ let PORT;
 let rpcOptions;
 
 /*
-** execute RPC call
-*/
+ ** execute RPC call
+ */
 function rpcCall (method, params, auth, callback) {
 
   const postData = JSON.stringify({
@@ -89,8 +89,8 @@ function rpcCall (method, params, auth, callback) {
 /*******************************/
 
 /*
-** prepares `backend-rpccall` to receive RPC calls from the renderer
-*/
+ ** prepares `backend-rpccall` to receive RPC calls from the renderer
+ */
 function init(options) {
   HOSTNAME = options.rpcbind || 'localhost';
   PORT = options.port;
