@@ -10,8 +10,8 @@ let PORT;
 let rpcOptions;
 let auth;
 
-exports.init = function(options) {
-  let options = options || _options.get();
+exports.init = function(opts) {
+  let options = opts || _options.get();
 
   HOSTNAME = options.rpcbind || 'localhost';
   PORT     = options.port;
