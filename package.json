@@ -1,6 +1,6 @@
 {
   "name": "particl-rpc-service",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "",
   "main": "rpc.js",
   "engines": {

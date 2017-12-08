@@ -10,12 +10,12 @@ let PORT;
 let rpcOptions;
 let auth;
 
-exports.init = function() {
-  let options = _options.get();
+exports.init = function(options) {
+  let options = options || _options.get();
 
   HOSTNAME = options.rpcbind || 'localhost';
   PORT     = options.port;
-  auth     = cookie.getAuth(_options.get());
+  auth     = cookie.getAuth(options);
 }
 
 /*
