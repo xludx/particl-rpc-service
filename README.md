@@ -3,7 +3,7 @@ particl-rpc-service
 
 ## installation
 
-TODO
+`npm install --save particl-rpc-service`
 
 ## usage
 
