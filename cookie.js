@@ -1,34 +1,31 @@
-const fs = require('fs');
-const os = require('os');
+const fs   = require('fs');
+const os   = require('os');
 const path = require('path');
-const log = require('electron-log');
+const log  = require('electron-log');
 
 /*
- ** returns Particl config folder
- */
+** returns Particl config folder
+*/
 function findCookiePath() {
 
   var homeDir = os.homedir ? os.homedir() : process.env['HOME'];
 
   var dir,
-    appName = 'Particl';
+      appName = 'Particl';
   switch (process.platform) {
     case 'linux': {
-      dir = prepareDir(homeDir, '.' + appName.toLowerCase())
-        .result;
+      dir = prepareDir(homeDir, '.' + appName.toLowerCase()).result;
       break;
     }
 
     case 'darwin': {
-      dir = prepareDir(homeDir, 'Library', 'Application Support', appName)
-        .result;
+      dir = prepareDir(homeDir, 'Library', 'Application Support', appName).result;
       break;
     }
 
     case 'win32': {
       dir = prepareDir(process.env['APPDATA'], appName)
-        .or(homeDir, 'AppData', 'Roaming', appName)
-        .result;
+           .or(homeDir, 'AppData', 'Roaming', appName).result;
       break;
     }
   }
@@ -41,15 +38,15 @@ function findCookiePath() {
 }
 
 /*
- ** directory resolver
- */
+** directory resolver
+*/
 function prepareDir(dirPath) {
   // jshint -W040
   if (!this || this.or !== prepareDir || !this.result) {
     // if dirPath couldn't be resolved
     if (!dirPath) {
       // return this function to be chained with .or()
-      return {or: prepareDir};
+      return { or: prepareDir };
     }
 
     //noinspection JSCheckFunctionSignatures
@@ -60,7 +57,7 @@ function prepareDir(dirPath) {
       fs.accessSync(dirPath, fs.W_OK);
     } catch (e) {
       // return this function to be chained with .or()
-      return {or: prepareDir};
+      return { or: prepareDir };
     }
   }
 
@@ -71,8 +68,8 @@ function prepareDir(dirPath) {
 }
 
 /*
- ** create a directory
- */
+** create a directory
+*/
 function mkDir(dirPath, root) {
   var dirs = dirPath.split(path.sep);
   var dir = dirs.shift();
@@ -90,17 +87,19 @@ function mkDir(dirPath, root) {
 }
 
 /*
- ** returns the current RPC cookie
- ** RPC cookie is regenerated at every particld startup
- */
+** returns the current RPC cookie
+** RPC cookie is regenerated at every particld startup
+*/
 function getAuth(options) {
+
   if (options.rpcuser && options.rpcpassword) {
     return options.rpcuser + ':' + options.rpcpassword;
   }
 
-  // const COOKIE_FILE = findCookiePath() + `${options.testnet ? '/testnet' : ''}/.cookie`;
-  const COOKIE_FILE = findCookiePath() + (options.testnet ? '/testnet' : '') + '/.cookie';
   let auth;
+  const COOKIE_FILE = findCookiePath()
+                    + (options.testnet ? '/testnet' : '')
+                    + '/.cookie';
 
   if (fs.existsSync(COOKIE_FILE)) {
     auth = fs.readFileSync(COOKIE_FILE, 'utf8').trim();
